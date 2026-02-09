@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function PaymentsReport() {
   const [rows, setRows] = useState([]);
   const [type, setType] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+ const t = useTranslations('');
 
   async function load() {
     const params = new URLSearchParams();
@@ -21,7 +23,7 @@ export default function PaymentsReport() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4 text-black">
-        Payments Report
+        {t("payments_report")}
       </h1>
 
       {/* Filters */}
@@ -31,9 +33,9 @@ export default function PaymentsReport() {
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
-          <option value="">All</option>
-          <option value="CUSTOMER">Customer Payments</option>
-          <option value="VENDOR">Vendor Payments</option>
+          <option value="">{t("all")}</option>
+          <option value="CUSTOMER">{t("customer_payments")}</option>
+          <option value="VENDOR">{t("vendor_payments")}</option>
         </select>
 
         <input
@@ -52,7 +54,7 @@ export default function PaymentsReport() {
           onClick={load}
           className="bg-red-700 text-white px-4 rounded"
         >
-          Filter
+          {t("filter")}
         </button>
       </div>
 
@@ -61,11 +63,11 @@ export default function PaymentsReport() {
         <table className="w-full text-sm">
           <thead className="bg-gray-100 text-black">
             <tr>
-              <th className="p-3 text-left">Date</th>
-              <th className="p-3 text-left">Type</th>
-              <th className="p-3 text-left">Party</th>
-              <th className="p-3 text-left">Method</th>
-              <th className="p-3 text-right">Amount</th>
+              <th className="p-3 text-left">{t("date")}</th>
+              <th className="p-3 text-left">{t("type")}</th>
+              <th className="p-3 text-left">{t("party")}</th>
+              <th className="p-3 text-left">{t("method")}</th>
+              <th className="p-3 text-right">{t("amount")}</th>
             </tr>
           </thead>
           <tbody>
@@ -101,7 +103,7 @@ export default function PaymentsReport() {
                   colSpan="5"
                   className="p-4 text-center text-gray-500"
                 >
-                  No payments found
+                  {t("no_payments_found")}
                 </td>
               </tr>
             )}

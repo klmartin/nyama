@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import UserModal from "@/app/components/addeditusermodal";
+import { useTranslations } from "next-intl";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(false);
   const [editing, setEditing] = useState(null);
+ const t = useTranslations('');
 
   async function load() {
     const res = await fetch(`/api/users?q=${search}`);
@@ -27,7 +29,7 @@ export default function UsersPage() {
     <div className="bg-white p-6 rounded shadow space-y-4">
       <div className="flex justify-between">
         <input
-          placeholder="Search user..."
+          placeholder={t("search_users")}
           className="border p-2 w-64 text-black"
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -38,18 +40,18 @@ export default function UsersPage() {
           }}
           className="bg-red-700 text-white px-4 py-2 rounded"
         >
-          + Add User
+          + {t("add_user")}
         </button>
       </div>
 
       <table className="w-full text-black">
         <thead className="bg-gray-100">
           <tr>
-            <th className="p-2">Name</th>
-            <th className="p-2">Username</th>
-            <th className="p-2">Role</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Actions</th>
+            <th className="p-2">{t("name")}</th>
+            <th className="p-2">{t("username")}</th>
+            <th className="p-2">{t("role")}</th>
+            <th className="p-2">{t("status")}</th>
+            <th className="p-2">{t("actions")}</th>
           </tr>
         </thead>
         <tbody>
@@ -69,13 +71,13 @@ export default function UsersPage() {
                     setModal(true);
                   }}
                 >
-                  Edit
+                  {t("edit")}
                 </button>
                 <button
                   className="text-red-600"
                   onClick={() => remove(u.id)}
                 >
-                  Delete
+                  {t("delete")}
                 </button>
               </td>
             </tr>

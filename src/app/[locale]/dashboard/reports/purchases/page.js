@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function PurchasesReport() {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+ const t = useTranslations('');
 
   async function load() {
     const res = await fetch(
@@ -19,14 +21,14 @@ export default function PurchasesReport() {
   return (
     <div className="bg-white p-6 rounded shadow space-y-4">
       <h1 className="text-2xl font-bold text-black">
-        Purchases Report
+        {t("purchases_report")}
       </h1>
 
       {/* Filters */}
       <div className="flex gap-3 items-end">
         <div>
           <label className="block text-sm font-semibold text-black">
-            From Date
+            {t("from")}
           </label>
           <input
             type="date"
@@ -37,7 +39,7 @@ export default function PurchasesReport() {
 
         <div>
           <label className="block text-sm font-semibold text-black">
-            To Date
+            {t("to")}
           </label>
           <input
             type="date"
@@ -50,7 +52,7 @@ export default function PurchasesReport() {
           onClick={load}
           className="bg-red-700 text-white px-4 py-2 rounded"
         >
-          Generate
+          {t("generate")}
         </button>
       </div>
 
@@ -59,11 +61,11 @@ export default function PurchasesReport() {
         <table className="w-full text-sm border">
           <thead className="bg-gray-100 text-black">
             <tr>
-              <th className="p-3 text-left">Supplier</th>
-              <th className="p-3 text-left">Product</th>
-              <th className="p-3 text-left">Quantity</th>
-              <th className="p-3 text-right">Amount</th>
-              <th className="p-3 text-left">Date</th>
+              <th className="p-3 text-left">{t("supplier")}</th>
+              <th className="p-3 text-left">{t("product")}</th>
+              <th className="p-3 text-left">{t("quantity")}</th>
+              <th className="p-3 text-right">{t("amount")}</th>
+              <th className="p-3 text-left">{t("date")}</th>
             </tr>
           </thead>
           <tbody>
@@ -85,7 +87,7 @@ export default function PurchasesReport() {
       </div>
 
       <div className="text-right font-bold text-black">
-        Total Purchases Amount: {total}
+        {t("total_purchases_amount")}: {total}
       </div>
     </div>
   );

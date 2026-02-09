@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ExpensesReport() {
   const [expenses, setExpenses] = useState([]);
   const [total, setTotal] = useState(0);
+ const t = useTranslations('');
 
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -31,12 +33,12 @@ export default function ExpensesReport() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4 text-black">
-        Expenses Report
+        {t("expenses_report")}
       </h1>
 
       {/* Summary */}
       <div className="bg-white p-4 rounded shadow mb-6">
-        <p className="text-sm text-gray-500">Total Expenses</p>
+        <p className="text-sm text-gray-500">{t("total_expenses")}</p>
         <p className="text-2xl font-bold text-red-600">
           {Number(total).toLocaleString()}
         </p>
@@ -60,7 +62,7 @@ export default function ExpensesReport() {
 
         <input
           type="text"
-          placeholder="Category"
+          placeholder={t("category")}
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="border p-2 rounded text-black"
@@ -70,7 +72,7 @@ export default function ExpensesReport() {
           onClick={fetchExpenses}
           className="bg-red-700 text-white px-4 rounded"
         >
-          Filter
+          {t("filter")}
         </button>
       </div>
 
@@ -79,11 +81,11 @@ export default function ExpensesReport() {
         <table className="w-full text-sm">
           <thead className="bg-gray-100 text-black">
             <tr>
-              <th className="p-3 text-left">Date</th>
-              <th className="p-3 text-left">Title</th>
-              <th className="p-3 text-left">Category</th>
-              <th className="p-3 text-right">Amount</th>
-              <th className="p-3 text-left">Notes</th>
+              <th className="p-3 text-left">{t("date")}</th>
+              <th className="p-3 text-left">{t("title")}</th>
+              <th className="p-3 text-left">{t("category")}</th>
+              <th className="p-3 text-right">{t("amount")}</th>
+              <th className="p-3 text-left">{t("notes")}</th>
             </tr>
           </thead>
 
@@ -91,7 +93,7 @@ export default function ExpensesReport() {
             {expenses.length === 0 && (
               <tr>
                 <td colSpan="5" className="p-4 text-center text-gray-500">
-                  No expenses found
+                  {t("no_expenses_found")}
                 </td>
               </tr>
             )}

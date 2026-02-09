@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function SalesReport() {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+ const t = useTranslations('');
 
   async function load() {
     const res = await fetch(
@@ -18,13 +20,13 @@ export default function SalesReport() {
 
   return (
     <div className="bg-white p-6 rounded shadow space-y-4 text-gray-900">
-      <h2 className="text-xl font-bold">Sales Report</h2>
+      <h2 className="text-xl font-bold">{t("sales_report")}</h2>
 
       {/* Filters */}
       <div className="flex gap-4 items-end">
         <div>
           <label className="block text-sm font-semibold mb-1 text-black">
-            From
+            {t("from")}
           </label>
           <input
             type="date"
@@ -35,7 +37,7 @@ export default function SalesReport() {
 
         <div>
           <label className="block text-sm font-semibold mb-1 text-black">
-            To
+            {t("to")}
           </label>
           <input
             type="date"
@@ -48,7 +50,7 @@ export default function SalesReport() {
           onClick={load}
           className="bg-red-700 text-white px-4 py-2 rounded h-10"
         >
-          Generate
+          {t("generate")}
         </button>
       </div>
 
@@ -56,9 +58,9 @@ export default function SalesReport() {
       <table className="w-full mt-4 border">
         <thead className="bg-gray-100 text-gray-800">
           <tr>
-            <th className="p-2 text-left">Customer</th>
-            <th className="p-2 text-right">Amount</th>
-            <th className="p-2 text-left">Date</th>
+            <th className="p-2 text-left">{t("customer")}</th>
+            <th className="p-2 text-right">{t("amount")}</th>
+            <th className="p-2 text-left">{t("date")}</th>
           </tr>
         </thead>
         <tbody>
@@ -77,7 +79,7 @@ export default function SalesReport() {
       </table>
 
       <div className="text-right font-bold text-lg">
-        Total: {Number(total).toLocaleString()}
+        {t("total")}: {Number(total).toLocaleString()}
       </div>
     </div>
   );

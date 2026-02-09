@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import AddPurchaseModal from "@/app/components/addeditpurchasesmodel";
-
+import { useTranslations } from "next-intl";
 export default function PurchasesPage() {
   const [purchases, setPurchases] = useState([]);
   const [show, setShow] = useState(false);
-
+const t = useTranslations('');
   const load = async () => {
     const res = await fetch("/api/purchases");
     setPurchases(await res.json());
@@ -18,12 +18,12 @@ export default function PurchasesPage() {
   return (
     <div>
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold text-black">Purchases</h1>
+        <h1 className="text-2xl font-bold text-black">{t("purchases")}</h1>
         <button
           onClick={() => setShow(true)}
           className="bg-red-600 text-white px-4 py-2 rounded"
         >
-          + Add Purchase
+          + {t("add_purchase")}
         </button>
       </div>
 
@@ -31,13 +31,13 @@ export default function PurchasesPage() {
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-3">Date</th>
-              <th className="p-3">Vendor</th>
-              <th className="p-3">Product</th>
-              <th className="p-3">Qty</th>
-              <th className="p-3">Price</th>
-              <th className="p-3">Total</th>
-              <th className="p-3">Status</th>
+              <th className="p-3">{t("date")}</th>
+              <th className="p-3">{t("vendor")}</th>
+              <th className="p-3">{t("product")}</th>
+              <th className="p-3">{t("quantity")}</th>
+              <th className="p-3">{t("price")}</th>
+              <th className="p-3">{t("total")}</th>
+              <th className="p-3">{t("status")}</th>
             </tr>
           </thead>
           <tbody>

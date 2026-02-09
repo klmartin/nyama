@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function AddSaleModal({ onClose, onSaved }) {
   const [customers, setCustomers] = useState([]);
   const [products, setProducts] = useState([]);
+ const t = useTranslations('');
 
   const [form, setForm] = useState({
     customer_id: "",
@@ -71,14 +73,14 @@ export default function AddSaleModal({ onClose, onSaved }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded w-[520px] text-black space-y-4">
-        <h2 className="text-xl font-bold">Add Sale</h2>
+        <h2 className="text-xl font-bold">{t("add_sale")}</h2>
 
         <select
           className="border p-2 w-full"
           value={form.customer_id}
           onChange={(e) => setForm({ ...form, customer_id: e.target.value })}
         >
-          <option value="">Select Customer</option>
+          <option value="">{t("select_customer")}</option>
           {customers.map(c => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
@@ -91,7 +93,7 @@ export default function AddSaleModal({ onClose, onSaved }) {
               value={item.product_id}
               onChange={(e) => updateItem(i, "product_id", e.target.value)}
             >
-              <option value="">Product</option>
+              <option value="">{t("select_product")}</option>
               {products.map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -100,7 +102,7 @@ export default function AddSaleModal({ onClose, onSaved }) {
             <input
               type="number"
               className="border p-2 w-20"
-              placeholder="Qty"
+              placeholder={t("quantity")}
               value={item.quantity}
               onChange={(e) => updateItem(i, "quantity", e.target.value)}
             />
@@ -108,7 +110,7 @@ export default function AddSaleModal({ onClose, onSaved }) {
             <input
               type="number"
               className="border p-2 w-28"
-              placeholder="Price"
+              placeholder={t("price_per_unit")}
               value={item.price_per_unit}
               onChange={(e) => updateItem(i, "price_per_unit", e.target.value)}
             />
@@ -128,11 +130,11 @@ export default function AddSaleModal({ onClose, onSaved }) {
           onClick={addItem}
           className="text-sm text-blue-600"
         >
-          + Add Item
+          + {t("add_item")}
         </button>
 
         <div className="font-semibold">
-          Total: <span className="text-red-600">{total.toLocaleString()}</span>
+          {t("total")}: <span className="text-red-600">{total.toLocaleString()}</span>
         </div>
 
         <select
@@ -140,19 +142,19 @@ export default function AddSaleModal({ onClose, onSaved }) {
           value={form.payment_status}
           onChange={(e) => setForm({ ...form, payment_status: e.target.value })}
         >
-          <option value="PAID">Paid</option>
-          <option value="UNPAID">Unpaid</option>
+          <option value="PAID">{t("paid")}</option>
+          <option value="UNPAID">{t("unpaid")}</option>
         </select>
 
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="border px-4 py-2 rounded">
-            Cancel
+            {t("cancel")}
           </button>
           <button
             onClick={submit}
             className="bg-red-600 text-white px-4 py-2 rounded"
           >
-            Save Sale
+            {t("save")}
           </button>
         </div>
       </div>

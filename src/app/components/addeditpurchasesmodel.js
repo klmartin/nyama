@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { useTranslations } from "next-intl";
 export default function AddPurchaseModal({ onClose, onSaved }) {
   const [vendors, setVendors] = useState([]);
   const [products, setProducts] = useState([]);
-
+const t = useTranslations('');
   const [form, setForm] = useState({
     vendor_id: "",
     product_id: "",
@@ -50,7 +50,7 @@ export default function AddPurchaseModal({ onClose, onSaved }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded shadow w-[420px] p-6 text-gray-900">
-        <h2 className="text-xl font-bold mb-4">Add Purchase</h2>
+        <h2 className="text-xl font-bold mb-4">{t("add_purchase")}</h2>
 
         {/* Vendor */}
         <select
@@ -60,7 +60,7 @@ export default function AddPurchaseModal({ onClose, onSaved }) {
             setForm({ ...form, vendor_id: e.target.value })
           }
         >
-          <option value="">Select Vendor</option>
+          <option value="">{t("select_vendor")}</option>
           {vendors.map((v) => (
             <option key={v.id} value={v.id}>
               {v.name}
@@ -76,7 +76,7 @@ export default function AddPurchaseModal({ onClose, onSaved }) {
             setForm({ ...form, product_id: e.target.value })
           }
         >
-          <option value="">Select Product</option>
+          <option value="">{t("select_product")}</option>
           {products.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
@@ -89,7 +89,7 @@ export default function AddPurchaseModal({ onClose, onSaved }) {
           type="number"
           step="0.01"
           className="border p-2 w-full mb-3 text-black"
-          placeholder="Quantity"
+          placeholder={t("quantity")}
           value={form.quantity}
           onChange={(e) =>
             setForm({ ...form, quantity: e.target.value })
@@ -101,7 +101,7 @@ export default function AddPurchaseModal({ onClose, onSaved }) {
           type="number"
           step="0.01"
           className="border p-2 w-full mb-3 text-black"
-          placeholder="Buying price per unit"
+          placeholder={t("buying_price_per_unit")}
           value={form.price_per_unit}
           onChange={(e) =>
             setForm({ ...form, price_per_unit: e.target.value })
@@ -110,7 +110,7 @@ export default function AddPurchaseModal({ onClose, onSaved }) {
 
         {/* Total */}
         <div className="mb-3 font-semibold">
-          Total Cost:{" "}
+          {t("total_cost")}:{" "}
           <span className="text-red-600">{total.toLocaleString()}</span>
         </div>
 
@@ -122,8 +122,8 @@ export default function AddPurchaseModal({ onClose, onSaved }) {
             setForm({ ...form, payment_status: e.target.value })
           }
         >
-          <option value="UNPAID">Unpaid</option>
-          <option value="PAID">Paid</option>
+          <option value="UNPAID">{t("unpaid")}</option>
+          <option value="PAID">{t("paid")}</option>
         </select>
 
         {/* Actions */}
@@ -132,13 +132,13 @@ export default function AddPurchaseModal({ onClose, onSaved }) {
             onClick={onClose}
             className="px-4 py-2 border rounded hover:bg-gray-100"
           >
-            Cancel
+            {t("cancel")}
           </button>
           <button
             onClick={submit}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
-            Save Purchase
+            {t("save")}
           </button>
         </div>
       </div>

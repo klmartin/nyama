@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function AddPaymentModal({ type, onClose, onSaved }) {
   const [list, setList] = useState([]);
@@ -10,6 +11,7 @@ export default function AddPaymentModal({ type, onClose, onSaved }) {
     payment_date: new Date().toISOString().slice(0, 10),
     notes: "",
   });
+ const t = useTranslations('');
 
   useEffect(() => {
     fetch(type === "CUSTOMER" ? "/api/customers" : "/api/vendors")
@@ -40,7 +42,7 @@ export default function AddPaymentModal({ type, onClose, onSaved }) {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded w-[400px] text-gray-900">
         <h2 className="text-xl font-bold mb-4">
-          Add {type === "CUSTOMER" ? "Customer" : "Vendor"} Payment
+          {t("add")} {type === "CUSTOMER" ? t("customer") : t("vendor")} {t("payment")}
         </h2>
 
         <select
@@ -49,7 +51,7 @@ export default function AddPaymentModal({ type, onClose, onSaved }) {
             setForm({ ...form, reference_id: e.target.value })
           }
         >
-          <option value="">Select</option>
+          <option value="">{t("select")}</option>
           {list.map((i) => (
             <option key={i.id} value={i.id}>
               {i.name}
@@ -60,7 +62,7 @@ export default function AddPaymentModal({ type, onClose, onSaved }) {
         <input
           type="number"
           className="border p-2 w-full mb-3 text-black"
-          placeholder="Amount"
+          placeholder={t("amount")}
           onChange={(e) =>
             setForm({ ...form, amount: e.target.value })
           }
@@ -72,27 +74,27 @@ export default function AddPaymentModal({ type, onClose, onSaved }) {
             setForm({ ...form, payment_method: e.target.value })
           }
         >
-          <option value="CASH">Cash</option>
-          <option value="MOBILE">Mobile</option>
-          <option value="BANK">Bank</option>
+          <option value="CASH">{t("cash")}</option>
+          <option value="MOBILE">{t("mobile")}</option>
+          <option value="BANK">{t("bank")}</option>
         </select>
 
         <input
           type="text"
           className="border p-2 w-full mb-3 text-black"
-          placeholder="Notes (optional)"
+          placeholder={t("notes")}
           onChange={(e) =>
             setForm({ ...form, notes: e.target.value })
           }
         />
 
         <div className="flex justify-end gap-2">
-          <button onClick={onClose}>Cancel</button>
+          <button onClick={onClose}>{t("cancel")}</button>
           <button
             onClick={submit}
             className="bg-red-600 text-white px-4 py-2 rounded"
           >
-            Save
+            {t("save")}
           </button>
         </div>
       </div>

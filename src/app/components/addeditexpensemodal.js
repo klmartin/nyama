@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
   const [form, setForm] = useState({
@@ -12,6 +13,8 @@ export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
     payment_method: expense?.payment_method || "CASH",
     notes: expense?.notes || "",
   });
+
+ const t = useTranslations('');
 
   async function submit() {
     const method = expense ? "PUT" : "POST";
@@ -30,19 +33,19 @@ export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded shadow w-[420px] p-6 text-black">
         <h2 className="text-xl font-bold mb-4">
-          {expense ? "Edit Expense" : "Add Expense"}
+          {expense ? t("edit_expense") : t("add_expense")}
         </h2>
 
         <input
           className="border p-2 w-full mb-3"
-          placeholder="Title"
+          placeholder={t("title")}
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
         />
 
         <input
           className="border p-2 w-full mb-3"
-          placeholder="Category"
+          placeholder={t("category")}
           value={form.category}
           onChange={(e) =>
             setForm({ ...form, category: e.target.value })
@@ -52,7 +55,7 @@ export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
         <input
           type="number"
           className="border p-2 w-full mb-3"
-          placeholder="Amount"
+          placeholder={t("amount")}
           value={form.amount}
           onChange={(e) =>
             setForm({ ...form, amount: e.target.value })
@@ -75,14 +78,14 @@ export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
             setForm({ ...form, payment_method: e.target.value })
           }
         >
-          <option value="CASH">Cash</option>
-          <option value="MOBILE">Mobile</option>
-          <option value="BANK">Bank</option>
+          <option value="CASH">{t("cash")}</option>
+          <option value="MOBILE">{t("mobile")}</option>
+          <option value="BANK">{t("bank")}</option>
         </select>
 
         <textarea
           className="border p-2 w-full mb-4"
-          placeholder="Notes (optional)"
+          placeholder={t("notes")}
           value={form.notes}
           onChange={(e) =>
             setForm({ ...form, notes: e.target.value })
@@ -94,13 +97,13 @@ export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
             onClick={onClose}
             className="px-4 py-2 border rounded"
           >
-            Cancel
+            {t("cancel")}
           </button>
           <button
             onClick={submit}
             className="px-4 py-2 bg-red-600 text-white rounded"
           >
-            Save
+            {t("save")}
           </button>
         </div>
       </div>

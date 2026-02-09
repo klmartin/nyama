@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import AddEditExpenseModal from "@/app/components/addeditexpensemodal";
+import { useTranslations } from "next-intl";
 
 export default function ExpensesPage() {
   const [expenses, setExpenses] = useState([]);
   const [show, setShow] = useState(false);
   const [editing, setEditing] = useState(null);
+  const t = useTranslations('');
 
   async function load() {
     const res = await fetch("/api/expenses");
@@ -31,7 +33,7 @@ export default function ExpensesPage() {
   return (
     <div>
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold text-black">Expenses</h1>
+        <h1 className="text-2xl font-bold text-black">{t("expenses")}</h1>
         <button
           onClick={() => {
             setEditing(null);
@@ -39,7 +41,7 @@ export default function ExpensesPage() {
           }}
           className="bg-red-600 text-white px-4 py-2 rounded"
         >
-          + Add Expense
+          + {t("add_expense")}
         </button>
       </div>
 
@@ -47,12 +49,12 @@ export default function ExpensesPage() {
         <table className="w-full text-sm">
           <thead className="bg-gray-100 text-black">
             <tr>
-              <th className="p-3">Date</th>
-              <th className="p-3">Title</th>
-              <th className="p-3">Category</th>
-              <th className="p-3">Method</th>
-              <th className="p-3 text-right">Amount</th>
-              <th className="p-3 text-center">Actions</th>
+              <th className="p-3">{t("date")}</th>
+              <th className="p-3">{t("title")}</th>
+              <th className="p-3">{t("category")}</th>
+              <th className="p-3">{t("payment_method")}</th>
+              <th className="p-3 text-right">{t("amount")}</th>
+              <th className="p-3 text-center">{t("actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -75,13 +77,13 @@ export default function ExpensesPage() {
                     }}
                     className="px-2 py-1 bg-yellow-500 text-white rounded"
                   >
-                    Edit
+                    {t("edit")}
                   </button>
                   <button
                     onClick={() => remove(e.id)}
                     className="px-2 py-1 bg-red-600 text-white rounded"
                   >
-                    Delete
+                    {t("delete")}
                   </button>
                 </td>
               </tr>
