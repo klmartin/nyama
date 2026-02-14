@@ -31,13 +31,13 @@ export default function CustomerPayments() {
 
       <div className="bg-white rounded shadow text-gray-900">
         <table className="w-full">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 text-gray-700">
             <tr>
-              <th className="p-3">{t("date")}</th>
-              <th className="p-3">{t("customer")}</th>
-              <th className="p-3">{t("amount")}</th>
-              <th className="p-3">{t("method")}</th>
-              <th className="p-3">{t("notes")}</th>
+              <th className="p-3 text-left">{t("date")}</th>
+              <th className="p-3 text-left">{t("customer")}</th>
+              <th className="p-3 text-left">{t("amount")}</th>
+              <th className="p-3 text-left">{t("method")}</th>
+              <th className="p-3 text-left">{t("notes")}</th>
             </tr>
           </thead>
           <tbody>
@@ -45,7 +45,7 @@ export default function CustomerPayments() {
               <tr key={p.id} className="border-t hover:bg-gray-50">
                 <td className="p-3">{new Date(p.payment_date).toLocaleDateString()}</td>
                 <td className="p-3">{p.party_name}</td>
-                <td className="p-3 font-semibold">{p.amount}</td>
+                <td className="p-3 font-semibold">{Number(p.amount).toLocaleString()}</td>
                 <td className="p-3">{p.payment_method}</td>
                 <td className="p-3">{p.notes || "-"}</td>
               </tr>

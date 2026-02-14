@@ -132,5 +132,20 @@
   "edit_user": "Hariri Mtumiaji",
   "admin": "Msimamizi",
   "seller": "Muuzaji",
-  "password": "Nenosiri"
+  "password": "Nenosiri",
+  "download_pdf":"Pakua PDF",
+  "month": "Mwezi",
+  "total_sales": "Mauzo Yote",
+  "no_expenses_found": "Hakuna matumizi yaliyopatikana",
+  "expense": {
+    "categories": {
+      "all_categories": "Aina Zote",
+      "raw_materials": "Malighafi",
+      "processing": "Usindikaji",
+      "facility": "Majengo na Vifaa",
+      "admin": "Utawala",
+      "distribution": "Usambazaji",
+      "compliance": "Uzingativu"
+    }
+  }
 }

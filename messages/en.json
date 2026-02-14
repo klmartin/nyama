@@ -129,5 +129,21 @@
   "edit_user": "Edit User",
   "admin": "Admin",
   "seller": "Seller",
-  "password": "Password"
+  "password": "Password",
+  "download_pdf":"Download PDF",
+  "month": "Month",
+  "total_sales": "Total Sales",
+  "no_expenses_found": "No expenses found",
+  "payments_report": "Payments Report",
+  "expense": {
+    "categories": {
+      "all_categories": "All Categories",
+      "raw_materials": "Raw Materials",
+      "processing": "Processing",
+      "facility": "Facility",
+      "admin": "Admin",
+      "distribution": "Distribution",
+      "compliance": "Compliance"
+    }
+  }
 }

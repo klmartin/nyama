@@ -48,9 +48,9 @@ const t = useTranslations('');
     <thead className="bg-gray-100 text-gray-700">
       <tr>
         <th className="p-3 text-left">{t("name")}</th>
-        <th className="p-3 text-center">{t("phone")}</th>
-        <th className="p-3 text-center">{t("address")}</th>
-        <th className="p-3 text-center">{t("actions")}</th>
+        <th className="p-3 text-left">{t("phone")}</th>
+        <th className="p-3 text-left">{t("address")}</th>
+        <th className="p-3 text-left">{t("actions")}</th>
       </tr>
     </thead>
 
@@ -60,10 +60,10 @@ const t = useTranslations('');
           key={v.id}
           className="border-t hover:bg-gray-50"
         >
-          <td className="p-3">{v.name}</td>
-          <td className="p-3 text-center">{v.phone}</td>
-          <td className="p-3 text-center">{v.address || "-"}</td>
-          <td className="p-3 text-center flex justify-center gap-2">
+          <td className="p-3 text-left">{v.name}</td>
+          <td className="p-3 text-left">{v.phone}</td>
+          <td className="p-3 text-left">{v.address || "-"}</td>
+          <td className="p-3 text-left flex  gap-2">
             <button
               className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
               onClick={() => {

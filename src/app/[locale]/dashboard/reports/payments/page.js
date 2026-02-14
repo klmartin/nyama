@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 export default function PaymentsReport() {
   const [rows, setRows] = useState([]);
   const [type, setType] = useState("");
@@ -20,6 +21,34 @@ export default function PaymentsReport() {
     setRows(json);
   }
 
+  function downloadPDF() {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text(t("sales_report"), 14, 15);
+
+    doc.setFontSize(10);
+    doc.text(`${t("from")}: ${from || "-"}`, 14, 22);
+    doc.text(`${t("to")}: ${to || "-"}`, 80, 22);
+
+    autoTable(doc, {
+      startY: 28,
+      head: [[t("customer"), t("amount"), t("date")]],
+      body: data.map((r) => [
+        r.customer,
+        Number(r.total_amount).toLocaleString(),
+        new Date(r.created_at).toLocaleDateString(),
+      ]),
+    });
+
+    doc.text(
+      `${t("total")}: ${Number(total).toLocaleString()}`,
+      14,
+      doc.lastAutoTable.finalY + 10
+    );
+
+    doc.save("sales-report.pdf");
+  }
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4 text-black">
@@ -56,6 +85,18 @@ export default function PaymentsReport() {
         >
           {t("filter")}
         </button>
+
+         {/* DOWNLOAD BUTTON */}
+        <button
+          onClick={downloadPDF}
+          disabled={!data.length}
+          className="
+            bg-gray-900 text-white px-4 py-2 rounded h-10
+            disabled:opacity-50 disabled:cursor-not-allowed
+          "
+        >
+          ⬇ {t("download_pdf")}
+        </button>
       </div>
 
       {/* Table */}
@@ -67,26 +108,26 @@ export default function PaymentsReport() {
               <th className="p-3 text-left">{t("type")}</th>
               <th className="p-3 text-left">{t("party")}</th>
               <th className="p-3 text-left">{t("method")}</th>
-              <th className="p-3 text-right">{t("amount")}</th>
+              <th className="p-3 text-left">{t("amount")}</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className="border-t">
-              <td className="p-3 text-black">
+              <td className="p-3 text-left">
                 {new Date(r.payment_date).toLocaleDateString()}
               </td>
-                <td className="p-3 text-black">
+                <td className="p-3 text-left">
                   {r.type}
                 </td>
-                <td className="p-3 text-black">
+                <td className="p-3 text-left">
                   {r.party_name || "—"}
                 </td>
-                <td className="p-3 text-black">
+                <td className="p-3 text-left">
                   {r.payment_method}
                 </td>
                 <td
-                  className={`p-3 text-right font-semibold ${
+                  className={`p-3 text-left font-semibold ${
                     r.type === "CUSTOMER"
                       ? "text-green-600"
                       : "text-red-600"

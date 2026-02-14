@@ -31,29 +31,29 @@ const t = useTranslations('');
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-3">{t("date")}</th>
-              <th className="p-3">{t("vendor")}</th>
-              <th className="p-3">{t("product")}</th>
-              <th className="p-3">{t("quantity")}</th>
-              <th className="p-3">{t("price")}</th>
-              <th className="p-3">{t("total")}</th>
-              <th className="p-3">{t("status")}</th>
+              <th className="p-3 text-left">{t("date")}</th>
+              <th className="p-3 text-left">{t("vendor")}</th>
+              <th className="p-3 text-left">{t("product")}</th>
+              <th className="p-3 text-left">{t("quantity")}</th>
+              <th className="p-3 text-left">{t("price")}</th>
+              <th className="p-3 text-left">{t("total")}</th>
+              <th className="p-3 text-left">{t("status")}</th>
             </tr>
           </thead>
           <tbody>
             {purchases.map((p) => (
               <tr key={p.id} className="border-t hover:bg-gray-50">
-                <td className="p-3 text-black">
+                <td className="p-3 text-left text-black">
   {new Date(p.purchase_date).toLocaleDateString()}
 </td>
-                <td className="p-3">{p.vendor}</td>
-                <td className="p-3">{p.product}</td>
-                <td className="p-3 text-center">{p.quantity}</td>
-                <td className="p-3 text-center">{p.price_per_unit}</td>
-                <td className="p-3 text-center font-semibold">
+                <td className="p-3 text-left">{p.vendor}</td>
+                <td className="p-3 text-left">{p.product}</td>
+                <td className="p-3 text-left">{p.quantity}</td>
+                <td className="p-3 text-left">{p.price_per_unit}</td>
+                <td className="p-3 text-left font-semibold">
                   {p.total_cost}
                 </td>
-                <td className="p-3 text-center">
+                <td className="p-3 text-left">
                   <span
                     className={`px-2 py-1 rounded text-white ${
                       p.payment_status === "PAID"

@@ -45,31 +45,31 @@ export default function ExpensesPage() {
         </button>
       </div>
 
-      <div className="bg-white rounded shadow">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100 text-black">
+      <div className="bg-white rounded shadow text-gray-900">
+        <table className="w-full ">
+          <thead className="bg-gray-100 text-gray-700">
             <tr>
-              <th className="p-3">{t("date")}</th>
-              <th className="p-3">{t("title")}</th>
-              <th className="p-3">{t("category")}</th>
-              <th className="p-3">{t("payment_method")}</th>
-              <th className="p-3 text-right">{t("amount")}</th>
-              <th className="p-3 text-center">{t("actions")}</th>
+              <th className="p-3 text-left">{t("date")}</th>
+              <th className="p-3 text-left">{t("title")}</th>
+              <th className="p-3 text-left">{t("category")}</th>
+              <th className="p-3 text-left">{t("payment_method")}</th>
+              <th className="p-3 text-left">{t("amount")}</th>
+              <th className="p-3 text-left">{t("actions")}</th>
             </tr>
           </thead>
           <tbody>
             {expenses.map((e) => (
               <tr key={e.id} className="border-t hover:bg-gray-50">
-                <td className="p-3 text-black">
+                <td className="p-3 text-left">
                   {new Date(e.expense_date).toLocaleDateString()}
                 </td>
-                <td className="p-3 text-black">{e.title}</td>
-                <td className="p-3 text-black">{e.category}</td>
-                <td className="p-3 text-black">{e.payment_method}</td>
-                <td className="p-3 text-right font-semibold text-black">
+                <td className="p-3 text-left">{e.title}</td>
+                <td className="p-3 text-left">{e.category}</td>
+                <td className="p-3 text-left">{e.payment_method}</td>
+                <td className="p-3  font-semibold text-left">
                   {Number(e.amount).toLocaleString()}
                 </td>
-                <td className="p-3 text-center flex justify-center gap-2">
+                <td className="p-3 text-left flex  gap-2">
                   <button
                     onClick={() => {
                       setEditing(e);

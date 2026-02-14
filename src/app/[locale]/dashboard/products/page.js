@@ -64,26 +64,26 @@ export default function ProductsPage() {
           <thead className="bg-gray-100 text-gray-700">
             <tr>
               <th className="p-3 text-left">{t("name")}</th>
-              <th className="p-3 text-center">{t("unit")}</th>
-              <th className="p-3 text-center">{t("stock")}</th>
-              <th className="p-3 text-center">{t("buy")}</th>
-              <th className="p-3 text-center">{t("sell")}</th>
-              <th className="p-3 text-center">{t("status")}</th>
-              <th className="p-3 text-center">{t("actions")}</th>
+              <th className="p-3 text-left">{t("unit")}</th>
+              <th className="p-3 text-left">{t("stock")}</th>
+              <th className="p-3 text-left">{t("buy")}</th>
+              <th className="p-3 text-left">{t("sell")}</th>
+              <th className="p-3 text-left">{t("status")}</th>
+              <th className="p-3 text-left">{t("actions")}</th>
             </tr>
           </thead>
           <tbody>
             {products.map((p) => (
               <tr key={p.id} className="border-t hover:bg-gray-50">
                 <td className="p-3">{p.name}</td>
-                <td className="p-3 text-center">{p.unit}</td>
-                <td className="p-3 text-center font-semibold">
-                  {p.remaining_stock}
+                <td className="p-3 text-left">{p.unit}</td>
+                <td className="p-3 text-left font-semibold">
+                  {Number(p.remaining_stock)}
                 </td>
-                <td className="p-3 text-center">{p.buying_price}</td>
-                <td className="p-3 text-center">{p.selling_price}</td>
-                <td className="p-3 text-center">{p.is_active ? "Active" : "Inactive"}</td>
-                <td className="p-3 text-center flex justify-center gap-2">
+                <td className="p-3 text-left">{Number(p.buying_price).toLocaleString()}</td>
+                <td className="p-3 text-left">{Number(p.selling_price).toLocaleString()}</td>
+                <td className="p-3 text-left">{p.is_active ? "Active" : "Inactive"}</td>
+                <td className="p-3 text-left flex  gap-2">
                   <button
                     onClick={() => {
                       setEditingProduct(p);

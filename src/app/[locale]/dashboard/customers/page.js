@@ -62,25 +62,25 @@ const t = useTranslations('');
         <table className="w-full">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
-              <th className="p-3 text-left">{t("name")}</th>
-              <th className="p-3 text-center">{t("phone")}</th>
+              <th className="p-3 text-left ">{t("name")}</th>
+              <th className="p-3 text-left">{t("phone")}</th>
               <th className="p-3 text-left">{t("address")}</th>
               <th className="p-3 text-left">{t("email")}</th>
-              <th className="p-3 text-center">{t("balance")}</th>
-              <th className="p-3 text-center">{t("status")}</th>
-              <th className="p-3 text-center">{t("actions")}</th>
+              <th className="p-3 text-left">{t("balance")}</th>
+              <th className="p-3 text-left">{t("status")}</th>
+              <th className="p-3 text-left">{t("actions")}</th>
             </tr>
           </thead>
           <tbody>
             {customers.map((c) => (
               <tr key={c.id} className="border-t hover:bg-gray-50">
-                <td className="p-3">{c.name}</td>
-                <td className="p-3 text-center">{c.phone}</td>
-                <td className="p-3">{c.address}</td>
-                <td className="p-3">{c.email}</td>
-                <td className="p-3 text-center">{c.balance}</td>
-                <td className="p-3 text-center">{c.is_active ? "Active" : "Inactive"}</td>
-                <td className="p-3 text-center flex justify-center gap-2">
+                <td className="p-3 text-left">{c.name}</td>
+                <td className="p-3 text-left">{c.phone}</td>
+                <td className="p-3 text-left">{c.address}</td>
+                <td className="p-3 text-left">{c.email}</td>
+                <td className="p-3 text-left">{Number(c.balance).toLocaleString()}</td>
+                <td className="p-3 text-left">{c.is_active ? "Active" : "Inactive"}</td>
+                <td className="p-3 text-left flex  gap-2">
                   <button
                     onClick={() => {
                       setEditingCustomer(c);

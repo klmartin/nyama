@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import ExpenseCategorySelect from "./expenseCategorySelect";
 
 export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
   const [form, setForm] = useState({
@@ -43,13 +44,19 @@ export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
           onChange={(e) => setForm({ ...form, title: e.target.value })}
         />
 
-        <input
+        {/* <input
           className="border p-2 w-full mb-3"
           placeholder={t("category")}
           value={form.category}
           onChange={(e) =>
             setForm({ ...form, category: e.target.value })
           }
+        /> */}
+
+        <ExpenseCategorySelect 
+          value={form.category}
+          onChange={(e) => setFormData({...form, category: e.target.value})}
+          className="border p-2 w-full mb-3"
         />
 
         <input
