@@ -10,7 +10,7 @@ function StatCard({ title, value, icon }) {
         {/* Title - bold and slightly larger */}
         <p className="text-sm font-semibold text-gray-700">{title}</p>
         {/* Value - bold, black, and larger */}
-        <p className="text-2xl font-bold text-black">{value}</p>
+        <p className="text-2xl font-bold text-black">{Number(value).toLocaleString()}</p>
       </div>
     </div>
   );

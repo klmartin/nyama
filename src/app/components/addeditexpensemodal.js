@@ -55,7 +55,7 @@ export default function AddEditExpenseModal({ expense, onClose, onSaved }) {
 
         <ExpenseCategorySelect 
           value={form.category}
-          onChange={(e) => setFormData({...form, category: e.target.value})}
+          onChange={(e) => setForm({...form, category: e.target.value})}
           className="border p-2 w-full mb-3"
         />
 

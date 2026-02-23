@@ -8,7 +8,7 @@ export default function ProductsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [search, setSearch] = useState("");
- const t = useTranslations('');
+  const t = useTranslations('');
 
   const fetchProducts = async () => {
     const res = await fetch(`/api/products?search=${encodeURIComponent(search)}`);
@@ -62,10 +62,13 @@ export default function ProductsPage() {
       <div className="bg-white rounded shadow text-gray-900">
         <table className="w-full">
           <thead className="bg-gray-100 text-gray-700">
-            <tr>
+            {/* Add suppressHydrationWarning here – fixes whitespace + data mismatch issues */}
+            <tr suppressHydrationWarning>
               <th className="p-3 text-left">{t("name")}</th>
               <th className="p-3 text-left">{t("unit")}</th>
               <th className="p-3 text-left">{t("stock")}</th>
+              <th className="p-3 text-left">{t("total_sold")}</th>
+              <th className="p-3 text-left">{t("sales_value")}</th>
               <th className="p-3 text-left">{t("buy")}</th>
               <th className="p-3 text-left">{t("sell")}</th>
               <th className="p-3 text-left">{t("status")}</th>
@@ -78,12 +81,18 @@ export default function ProductsPage() {
                 <td className="p-3">{p.name}</td>
                 <td className="p-3 text-left">{p.unit}</td>
                 <td className="p-3 text-left font-semibold">
-                  {Number(p.remaining_stock)}
+                  {Number(p.stock_quantity || 0).toLocaleString()}
+                </td>
+                <td className="p-3 text-left font-medium">
+                  {Number(p.total_sold_units || 0).toLocaleString()}
+                </td>
+                <td className="p-3 text-left font-medium">
+                  {Number(p.total_sales_value || 0).toLocaleString()}
                 </td>
                 <td className="p-3 text-left">{Number(p.buying_price).toLocaleString()}</td>
                 <td className="p-3 text-left">{Number(p.selling_price).toLocaleString()}</td>
                 <td className="p-3 text-left">{p.is_active ? "Active" : "Inactive"}</td>
-                <td className="p-3 text-left flex  gap-2">
+                <td className="p-3 text-left flex gap-2">
                   <button
                     onClick={() => {
                       setEditingProduct(p);

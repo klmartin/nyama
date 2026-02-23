@@ -66,7 +66,6 @@ const t = useTranslations('');
               <th className="p-3 text-left">{t("phone")}</th>
               <th className="p-3 text-left">{t("address")}</th>
               <th className="p-3 text-left">{t("email")}</th>
-              <th className="p-3 text-left">{t("balance")}</th>
               <th className="p-3 text-left">{t("status")}</th>
               <th className="p-3 text-left">{t("actions")}</th>
             </tr>
@@ -78,7 +77,6 @@ const t = useTranslations('');
                 <td className="p-3 text-left">{c.phone}</td>
                 <td className="p-3 text-left">{c.address}</td>
                 <td className="p-3 text-left">{c.email}</td>
-                <td className="p-3 text-left">{Number(c.balance).toLocaleString()}</td>
                 <td className="p-3 text-left">{c.is_active ? "Active" : "Inactive"}</td>
                 <td className="p-3 text-left flex  gap-2">
                   <button

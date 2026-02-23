@@ -1,16 +1,24 @@
 import { NextResponse } from "next/server";
 import {db} from "@/lib/db";
 
-// GET all products with optional search
+
 export async function GET(req) {
   try {
     const { search } = Object.fromEntries(req.nextUrl.searchParams);
 
     let sql = `
-      SELECT
-        p.*,
-        COALESCE(SUM(si.quantity), 0) AS sold_quantity,
-        (p.opening_stock - COALESCE(SUM(si.quantity), 0)) AS remaining_stock
+      SELECT 
+        p.id,
+        p.name,
+        p.unit,
+        p.stock_quantity,
+        p.buying_price,
+        p.selling_price,
+        p.is_active,
+        p.created_at,
+        p.updated_at,
+        COALESCE(SUM(si.quantity), 0) AS total_sold_units,
+        COALESCE(SUM(si.quantity * si.price_per_unit), 0) AS total_sales_value
       FROM products p
       LEFT JOIN sale_items si ON si.product_id = p.id
     `;
@@ -28,9 +36,20 @@ export async function GET(req) {
     `;
 
     const [rows] = await db.query(sql, params);
-    return NextResponse.json(rows);
+
+    // Optional: format numbers in backend if you prefer (or do it in frontend)
+    const formatted = rows.map(row => ({
+      ...row,
+      stock_quantity: Number(row.stock_quantity || 0),
+      buying_price: Number(row.buying_price || 0),
+      selling_price: Number(row.selling_price || 0),
+      total_sold_units: Number(row.total_sold_units || 0),
+      total_sales_value: Number(row.total_sales_value || 0),
+    }));
+
+    return NextResponse.json(formatted);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching products:", error);
     return NextResponse.json(
       { message: "Failed to fetch products" },
       { status: 500 }
@@ -38,23 +57,22 @@ export async function GET(req) {
   }
 }
 
-
 // CREATE product
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, opening_stock, unit, buying_price, selling_price } = body;
+    const { name, unit, buying_price, selling_price } = body;
 
-    if (!name || !opening_stock || !unit || !buying_price || !selling_price)
+    if (!name ||   !unit || !buying_price || !selling_price)
       return NextResponse.json(
         { message: "All fields are required" },
         { status: 400 }
       );
 
     await db.query(
-      `INSERT INTO products (name, opening_stock, unit, buying_price, selling_price)
-       VALUES (?, ?, ?, ?, ?)`,
-      [name, opening_stock, unit, buying_price, selling_price]
+      `INSERT INTO products (name,  unit, buying_price, selling_price)
+       VALUES (?, ?, ?, ?)`,
+      [name, unit, buying_price, selling_price]
     );
 
     return NextResponse.json({ message: "Product created successfully" });
@@ -71,9 +89,9 @@ export async function POST(req) {
 export async function PUT(req) {
   try {
     const body = await req.json();
-    const { id, name, opening_stock, unit, buying_price, selling_price, is_active } = body;
+    const { id, name, unit, buying_price, selling_price, is_active } = body;
 
-    if (!id || !name || !opening_stock || !unit || !buying_price || !selling_price)
+    if (!id || !name  || !unit || !buying_price || !selling_price)
       return NextResponse.json(
         { message: "All fields are required" },
         { status: 400 }
@@ -81,10 +99,9 @@ export async function PUT(req) {
 
     await db.query(
       `UPDATE products 
-       SET name=?, opening_stock=?, unit=?, buying_price=?, selling_price=?, is_active=? 
+       SET name=?,  unit=?, buying_price=?, selling_price=?, is_active=? 
        WHERE id=?`,
-      [name, opening_stock,
-         unit, buying_price, selling_price, is_active ? 1 : 0, id]
+      [name, unit, buying_price, selling_price, is_active ? 1 : 0, id]
     );
 
     return NextResponse.json({ message: "Product updated successfully" });

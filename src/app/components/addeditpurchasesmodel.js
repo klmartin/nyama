@@ -1,66 +1,146 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+
 export default function AddPurchaseModal({ onClose, onSaved }) {
+  const t = useTranslations("");
+
   const [vendors, setVendors] = useState([]);
   const [products, setProducts] = useState([]);
-const t = useTranslations('');
+
+  const [buyingPrice, setBuyingPrice] = useState(0);
+
   const [form, setForm] = useState({
     vendor_id: "",
     product_id: "",
     quantity: "",
-    price_per_unit: "",
     payment_status: "UNPAID",
+    amount_paid: "",
     purchase_date: new Date().toISOString().slice(0, 10),
   });
 
-  const total =
-    Number(form.quantity || 0) * Number(form.price_per_unit || 0);
+  const [error, setError] = useState("");
 
   // Load vendors & products
   useEffect(() => {
-    fetch("/api/vendors").then((r) => r.json()).then(setVendors);
-    fetch("/api/products").then((r) => r.json()).then(setProducts);
+    fetch("/api/vendors")
+      .then((r) => r.json())
+      .then(setVendors);
+
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then((data) => {
+        setProducts(data);
+      });
   }, []);
 
+  // When product changes → use buying_price (not selling_price)
+  const handleProductChange = (e) => {
+    const productId = e.target.value;
+
+    const selected = products.find(
+      (p) => String(p.id) === String(productId)
+    );
+
+    if (selected) {
+      setBuyingPrice(parseFloat(selected.buying_price) || 0);
+    } else {
+      setBuyingPrice(0);
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      product_id: productId,
+    }));
+  };
+
+  const total =
+    parseFloat(form.quantity || 0) * parseFloat(buyingPrice || 0);
+
   const submit = async () => {
-    if (
-      !form.vendor_id ||
-      !form.product_id ||
-      !form.quantity ||
-      !form.price_per_unit
-    ) {
-      alert("All fields are required");
+    setError("");
+
+    if (!form.vendor_id || !form.product_id || !form.quantity) {
+      setError("All fields are required");
       return;
     }
 
-    await fetch("/api/purchases", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...form,
-        total_cost: total,
-      }),
-    });
+    const qty = parseFloat(form.quantity);
+    if (qty <= 0) {
+      setError("Quantity must be greater than 0");
+      return;
+    }
 
-    onSaved();
-    onClose();
+    let amountPaid = 0;
+
+    if (form.payment_status === "PAID") {
+      amountPaid = total;
+    }
+
+    if (form.payment_status === "PARTIAL") {
+      amountPaid = parseFloat(form.amount_paid || 0);
+
+      if (amountPaid <= 0 || amountPaid >= total) {
+        setError("Partial amount must be greater than 0 and less than total");
+        return;
+      }
+    }
+
+    try {
+      const res = await fetch("/api/purchases", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          vendor_id: form.vendor_id,
+          product_id: form.product_id,
+          quantity: qty,
+          purchase_date: form.purchase_date,
+          payment_status: form.payment_status,
+          amount_paid: amountPaid,
+          // NO buying_price or total_cost here — backend calculates them
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Failed to create purchase");
+        return;
+      }
+
+      onSaved();
+      onClose();
+    } catch (err) {
+      setError("Network error - could not reach server");
+      console.error(err);
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded shadow w-[420px] p-6 text-gray-900">
-        <h2 className="text-xl font-bold mb-4">{t("add_purchase")}</h2>
+      <div className="bg-white rounded-2xl shadow-xl w-[480px] p-6 text-gray-900">
+        <h2 className="text-xl font-bold mb-5">
+          {t("add_purchase")}
+        </h2>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
 
         {/* Vendor */}
         <select
-          className="border p-2 w-full mb-3 text-black"
+          className="border p-3 w-full mb-3 rounded-lg"
           value={form.vendor_id}
           onChange={(e) =>
-            setForm({ ...form, vendor_id: e.target.value })
+            setForm((prev) => ({
+              ...prev,
+              vendor_id: e.target.value,
+            }))
           }
         >
-          <option value="">{t("select_vendor")}</option>
+          <option value="">Select Vendor</option>
           {vendors.map((v) => (
             <option key={v.id} value={v.id}>
               {v.name}
@@ -70,13 +150,11 @@ const t = useTranslations('');
 
         {/* Product */}
         <select
-          className="border p-2 w-full mb-3 text-black"
+          className="border p-3 w-full mb-3 rounded-lg"
           value={form.product_id}
-          onChange={(e) =>
-            setForm({ ...form, product_id: e.target.value })
-          }
+          onChange={handleProductChange}
         >
-          <option value="">{t("select_product")}</option>
+          <option value="">Select Product</option>
           {products.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
@@ -84,61 +162,96 @@ const t = useTranslations('');
           ))}
         </select>
 
+        {/* Buying Price Display */}
+        <div className="bg-gray-50 border p-3 rounded-lg mb-3">
+          <p className="text-sm text-gray-500">
+            Buying Price (Auto)
+          </p>
+          <p className="font-semibold">
+            {buyingPrice.toLocaleString()}
+          </p>
+        </div>
+
         {/* Quantity */}
         <input
           type="number"
           step="0.01"
-          className="border p-2 w-full mb-3 text-black"
-          placeholder={t("quantity")}
+          className="border p-3 w-full mb-3 rounded-lg"
+          placeholder="Quantity"
           value={form.quantity}
           onChange={(e) =>
-            setForm({ ...form, quantity: e.target.value })
-          }
-        />
-
-        {/* Price */}
-        <input
-          type="number"
-          step="0.01"
-          className="border p-2 w-full mb-3 text-black"
-          placeholder={t("buying_price_per_unit")}
-          value={form.price_per_unit}
-          onChange={(e) =>
-            setForm({ ...form, price_per_unit: e.target.value })
+            setForm((prev) => ({
+              ...prev,
+              quantity: e.target.value,
+            }))
           }
         />
 
         {/* Total */}
-        <div className="mb-3 font-semibold">
-          {t("total_cost")}:{" "}
-          <span className="text-red-600">{total.toLocaleString()}</span>
+        <div className="bg-gray-100 p-3 rounded-lg mb-4 border">
+          <p className="text-sm text-gray-500">
+            Total Cost
+          </p>
+          <p className="text-xl font-bold text-red-600">
+            {total.toLocaleString()}
+          </p>
         </div>
 
         {/* Payment Status */}
         <select
-          className="border p-2 w-full mb-4 text-black"
+          className="border p-3 w-full mb-3 rounded-lg"
           value={form.payment_status}
           onChange={(e) =>
-            setForm({ ...form, payment_status: e.target.value })
+            setForm((prev) => ({
+              ...prev,
+              payment_status: e.target.value,
+            }))
           }
         >
-          <option value="UNPAID">{t("unpaid")}</option>
-          <option value="PAID">{t("paid")}</option>
+          <option value="UNPAID">Unpaid</option>
+          <option value="PARTIAL">Partial</option>
+          <option value="PAID">Paid</option>
         </select>
 
-        {/* Actions */}
-        <div className="flex justify-end gap-2">
+        {/* Partial Field */}
+        {form.payment_status === "PARTIAL" && (
+          <input
+            type="number"
+            step="0.01"
+            className="border p-3 w-full mb-3 rounded-lg"
+            placeholder="Amount Paid"
+            value={form.amount_paid}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                amount_paid: e.target.value,
+              }))
+            }
+          />
+        )}
+
+        {/* Remaining Preview */}
+        {form.payment_status === "PARTIAL" && (
+          <div className="bg-yellow-50 border p-3 rounded-lg mb-4">
+            Remaining:{" "}
+            {(total - parseFloat(form.amount_paid || 0)).toLocaleString()}
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div className="flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 border rounded hover:bg-gray-100"
+            className="px-4 py-2 border rounded-lg"
           >
-            {t("cancel")}
+            Cancel
           </button>
+
           <button
             onClick={submit}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            className="px-4 py-2 bg-red-600 text-white rounded-lg"
           >
-            {t("save")}
+            Save
           </button>
         </div>
       </div>

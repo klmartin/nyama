@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
   const [form, setForm] = useState({
     id: product?.id || null,
     name: product?.name || "",
-    opening_stock: product?.opening_stock || "",
     unit: product?.unit || "KG",
     buying_price: product?.buying_price || "",
     selling_price: product?.selling_price || "",
@@ -15,7 +14,7 @@ import { useTranslations } from "next-intl";
  const t = useTranslations('');
 
   const submit = async () => {
-    if (!form.name || !form.buying_price || !form.selling_price || !form.opening_stock) {
+    if (!form.name || !form.buying_price || !form.selling_price ) {
       alert("All fields required");
       return;
     }
@@ -44,13 +43,7 @@ import { useTranslations } from "next-intl";
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         
-        <input
-          className="border border-gray-300 p-2 w-full mb-3 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
-          placeholder={t("opening_stock")}
-          value={form.opening_stock}
-          onChange={(e) => setForm({ ...form, opening_stock: e.target.value })}
-        />
-
+       
         <select
           className="border border-gray-300 p-2 w-full mb-3 rounded text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500"
           value={form.unit}

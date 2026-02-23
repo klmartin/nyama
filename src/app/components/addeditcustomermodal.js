@@ -9,7 +9,6 @@ export default function AddEditCustomerModal({ customer, onClose, onSaved }) {
     phone: customer?.phone || "",
     address: customer?.address || "",
     email: customer?.email || "",
-    balance: customer?.balance || 0,
     is_active: customer?.is_active ?? true,
   });
  const t = useTranslations('');
@@ -65,14 +64,7 @@ export default function AddEditCustomerModal({ customer, onClose, onSaved }) {
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
 
-        <input
-          type="number"
-          className="border border-gray-300 p-2 w-full mb-3 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
-          placeholder={t("balance")}
-          value={form.balance}
-          onChange={(e) => setForm({ ...form, balance: e.target.value })}
-        />
-
+      
         {form.id && (
           <div className="mb-3">
             <label className="flex items-center gap-2">

@@ -4,8 +4,10 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
-    const from = searchParams.get("from");
-    const to = searchParams.get("to");
+    const from       = searchParams.get("from");
+    const to         = searchParams.get("to");
+    const vendor_id  = searchParams.get("vendor_id");   // new
+    const product_id = searchParams.get("product_id");  // new
 
     if (!from || !to) {
       return NextResponse.json(
@@ -14,9 +16,7 @@ export async function GET(req) {
       );
     }
 
-    // 🔹 Fetch purchase rows
-    const [rows] = await db.query(
-      `
+    let query = `
       SELECT
         p.id,
         p.purchase_date,
@@ -30,20 +30,30 @@ export async function GET(req) {
       JOIN vendors v ON v.id = p.vendor_id
       JOIN products pr ON pr.id = p.product_id
       WHERE p.purchase_date BETWEEN ? AND ?
-      ORDER BY p.purchase_date DESC
-      `,
-      [from, to]
-    );
+    `;
 
-    // 🔹 Calculate total amount
-    const total = rows.reduce(
-      (sum, r) => sum + Number(r.total_cost),
-      0
-    );
+    const params = [from, to];
+
+    if (vendor_id) {
+      query += " AND p.vendor_id = ?";
+      params.push(vendor_id);
+    }
+
+    if (product_id) {
+      query += " AND p.product_id = ?";
+      params.push(product_id);
+    }
+
+    query += " ORDER BY p.purchase_date DESC";
+
+    const [rows] = await db.query(query, params);
+
+    // Calculate total
+    const total = rows.reduce((sum, r) => sum + Number(r.total_cost || 0), 0);
 
     return NextResponse.json({
       rows,
-      total
+      total,
     });
   } catch (error) {
     console.error("Purchases report error:", error);
